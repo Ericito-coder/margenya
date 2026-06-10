@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MargenYa — Sabé exactamente cuánto ganás</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand: #1A56DB;
+    --brand-dark: #0F3D9E;
+    --brand-light: #EBF2FF;
+    --brand-xlight: #F5F8FF;
+    --green: #1A7A3C;
+    --green-light: #EDFBF0;
+    --red: #B91C1C;
+    --red-light: #FEF2F2;
+    --yellow: #D97706;
+    --yellow-light: #FFFBEB;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-400: #9CA3AF;
+    --gray-600: #4B5563;
+    --gray-800: #1F2937;
+    --text: #111827;
+    --muted: #6B7280;
+    --white: #FFFFFF;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--white);
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 2rem;
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo { font-size: 1.4rem; font-weight: 700; color: var(--brand); text-decoration: none; letter-spacing: -0.5px; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--gray-600); font-size: 0.95rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--brand); }
+  .nav-cta {
+    background: var(--brand); color: var(--white);
+    padding: 0.5rem 1.25rem; border-radius: var(--radius-sm);
+    text-decoration: none; font-weight: 600; font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--brand-dark); }
+
+  /* CONTAINER */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(160deg, var(--brand-xlight) 0%, var(--white) 60%);
+    padding: 6rem 2rem 5rem;
+  }
+  .hero-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--brand-light); color: var(--brand);
+    padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge::before { content: "●"; font-size: 8px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-size: 2.8rem; font-weight: 800; line-height: 1.15;
+    letter-spacing: -1px; color: var(--text); margin-bottom: 1.25rem;
+  }
+  .hero h1 span { color: var(--brand); }
+  .hero p { font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--brand); color: var(--white);
+    padding: 0.875rem 1.75rem; border-radius: var(--radius-md);
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent; color: var(--brand);
+    padding: 0.875rem 1.75rem; border-radius: var(--radius-md);
+    font-weight: 600; font-size: 1rem; text-decoration: none;
+    border: 2px solid var(--brand-light); transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--brand); background: var(--brand-xlight); }
+  .hero-trust { margin-top: 1.5rem; font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .hero-trust::before { content: "✓"; color: var(--green); font-weight: 700; }
+
+  /* HERO MOCKUP */
+  .hero-mockup {
+    background: var(--white); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg); border: 1px solid var(--gray-200);
+    overflow: hidden;
+  }
+  .mockup-bar {
+    background: var(--gray-50); border-bottom: 1px solid var(--gray-200);
+    padding: 10px 16px; display: flex; align-items: center; gap: 6px;
+  }
+  .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-dot.r { background: #FF5F57; }
+  .mockup-dot.y { background: #FEBC2E; }
+  .mockup-dot.g { background: #28C840; }
+  .mockup-body { padding: 1.25rem; }
+  .mockup-title { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+  .mockup-stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+  .mockup-stat {
+    background: var(--gray-50); border-radius: var(--radius-sm);
+    padding: 10px 12px; border: 1px solid var(--gray-200);
+  }
+  .mockup-stat-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 2px; }
+  .mockup-stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .mockup-stat-value.green { color: var(--green); }
+  .mockup-stat-value.red { color: var(--red); }
+  .mockup-product-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 10px; border-radius: var(--radius-sm); margin-bottom: 4px;
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+  }
+  .mockup-product-name { font-size: 0.82rem; font-weight: 600; }
+  .mockup-product-meta { font-size: 0.75rem; color: var(--muted); }
+  .mockup-badge {
+    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+  }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+
+  /* PROBLEM SECTION */
+  .section { padding: 5rem 2rem; }
+  .section-label {
+    font-size: 0.8rem; font-weight: 700; color: var(--brand);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem;
+  }
+  .section-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 1rem; }
+  .section-sub { font-size: 1.05rem; color: var(--muted); max-width: 540px; }
+  .section-center { text-align: center; }
+  .section-center .section-sub { margin: 0 auto 3rem; }
+
+  .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
+  .pain-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+    border-top: 3px solid var(--red);
+  }
+  .pain-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .pain-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .pain-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  /* DEMO CALCULADORA */
+  .demo-section { background: var(--gray-50); padding: 5rem 2rem; }
+  .demo-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+  }
+  .demo-text h2 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 1rem; }
+  .demo-text p { color: var(--muted); font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+  .demo-step { display: flex; gap: 12px; margin-bottom: 1rem; }
+  .step-num {
+    width: 28px; height: 28px; min-width: 28px;
+    background: var(--brand); color: var(--white);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 700;
+  }
+  .step-text { font-size: 0.9rem; color: var(--gray-600); padding-top: 4px; }
+
+  .calc-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg); padding: 2rem;
+    box-shadow: var(--shadow-md);
+  }
+  .calc-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text); }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label {
+    display: block; font-size: 0.85rem; font-weight: 600;
+    color: var(--gray-600); margin-bottom: 0.4rem;
+  }
+  .form-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+  .form-input {
+    width: 100%; padding: 0.7rem 1rem;
+    border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
+    font-size: 1rem; color: var(--text); outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-light); }
+  .input-prefix {
+    position: relative;
+  }
+  .input-prefix span {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 0.9rem; color: var(--muted); pointer-events: none;
+  }
+  .input-prefix input { padding-left: 2rem; }
+  .input-suffix {
+    position: relative;
+  }
+  .input-suffix span {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 0.9rem; color: var(--muted); pointer-events: none;
+  }
+  .input-suffix input { padding-right: 2.5rem; }
+  .calc-result {
+    background: var(--brand-light); border: 2px solid var(--brand);
+    border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem;
+    display: none;
+  }
+  .calc-result.visible { display: block; }
+  .result-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+  .result-label { font-size: 0.85rem; color: var(--brand-dark); }
+  .result-value { font-size: 1.25rem; font-weight: 800; color: var(--brand); }
+  .result-big { font-size: 2rem !important; }
+  .result-divider { height: 1px; background: rgba(26,86,219,0.2); margin: 0.75rem 0; }
+  .result-alert { font-size: 0.8rem; margin-top: 0.75rem; padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); }
+  .alert-green { background: var(--green-light); color: var(--green); }
+  .alert-yellow { background: var(--yellow-light); color: var(--yellow); }
+  .alert-red { background: var(--red-light); color: var(--red); }
+  .calc-cta { margin-top: 1.25rem; width: 100%; text-align: center; display: block; }
+
+  /* FEATURES */
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .feature-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg); padding: 1.75rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .feature-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: var(--radius-md);
+    background: var(--brand-light); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem; font-size: 1.25rem;
+  }
+  .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+
+  /* PLANS */
+  .plans-section { background: var(--gray-50); padding: 5rem 2rem; }
+  .plans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 760px; margin: 3rem auto 0; }
+  .plan-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg); padding: 2rem;
+    position: relative;
+  }
+  .plan-card.featured {
+    border: 2px solid var(--brand);
+    box-shadow: var(--shadow-md);
+  }
+  .plan-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--brand); color: var(--white);
+    padding: 3px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+    white-space: nowrap;
+  }
+  .plan-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .plan-price { font-size: 2.25rem; font-weight: 800; color: var(--text); margin: 0.75rem 0 0.25rem; letter-spacing: -1px; }
+  .plan-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .plan-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .plan-features { list-style: none; margin-bottom: 1.75rem; }
+  .plan-features li {
+    font-size: 0.875rem; padding: 0.35rem 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .plan-features li::before { content: "✓"; color: var(--green); font-weight: 700; font-size: 0.8rem; }
+  .plan-features li.disabled { color: var(--gray-400); }
+  .plan-features li.disabled::before { content: "–"; color: var(--gray-400); }
+  .plan-btn {
+    display: block; width: 100%; text-align: center;
+    padding: 0.75rem; border-radius: var(--radius-md);
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .plan-btn.outline {
+    border: 2px solid var(--gray-200); color: var(--gray-600);
+  }
+  .plan-btn.outline:hover { border-color: var(--brand); color: var(--brand); }
+  .plan-btn.filled {
+    background: var(--brand); color: var(--white);
+  }
+  .plan-btn.filled:hover { background: var(--brand-dark); }
+
+  /* TESTIMONIOS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
+  .testimonial-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+  }
+  .stars { color: #F59E0B; font-size: 0.85rem; margin-bottom: 0.75rem; }
+  .testimonial-text { font-size: 0.875rem; color: var(--gray-600); line-height: 1.7; margin-bottom: 1rem; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--brand-light); display: flex; align-items: center;
+    justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--brand);
+  }
+  .author-name { font-size: 0.85rem; font-weight: 600; }
+  .author-role { font-size: 0.75rem; color: var(--muted); }
+
+  /* STATS */
+  .stats-section { background: var(--brand); padding: 4rem 2rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 800px; margin: 0 auto; text-align: center; }
+  .stat-num { font-size: 2.5rem; font-weight: 800; color: var(--white); }
+  .stat-label { font-size: 0.9rem; color: rgba(255,255,255,0.75); margin-top: 0.25rem; }
+
+  /* CTA FINAL */
+  .cta-section { padding: 5rem 2rem; text-align: center; }
+  .cta-section h2 { font-size: 2.25rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 1rem; }
+  .cta-section p { color: var(--muted); margin-bottom: 2rem; font-size: 1.05rem; }
+
+  /* CONTACTO */
+  .contact-section { background: var(--gray-50); padding: 5rem 2rem; }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-inner h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .contact-inner p { color: var(--muted); margin-bottom: 2rem; }
+  .contact-form { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  textarea.form-input { resize: vertical; min-height: 100px; }
+  .form-submit {
+    width: 100%; padding: 0.875rem;
+    background: var(--brand); color: var(--white);
+    border: none; border-radius: var(--radius-md);
+    font-weight: 700; font-size: 1rem; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--brand-dark); }
+  .form-success {
+    display: none; background: var(--green-light); color: var(--green);
+    border-radius: var(--radius-md); padding: 1rem; text-align: center;
+    font-weight: 600; margin-top: 1rem;
+  }
+  .form-success.visible { display: block; }
+
+  /* FAQ */
+  .faq-section { padding: 4rem 2rem; }
+  .faq-inner { max-width: 700px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--gray-200); }
+  .faq-question {
+    width: 100%; text-align: left; background: none; border: none;
+    padding: 1.1rem 0; font-size: 0.95rem; font-weight: 600;
+    color: var(--text); cursor: pointer; display: flex;
+    justify-content: space-between; align-items: center;
+    gap: 1rem;
+  }
+  .faq-question:hover { color: var(--brand); }
+  .faq-arrow { font-size: 1.1rem; transition: transform 0.2s; flex-shrink: 0; color: var(--muted); }
+  .faq-answer {
+    font-size: 0.9rem; color: var(--muted); line-height: 1.7;
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  .faq-answer.open { max-height: 200px; padding-bottom: 1rem; }
+  .faq-question.open .faq-arrow { transform: rotate(180deg); }
+
+  /* FOOTER */
+  footer {
+    background: var(--gray-800); color: var(--white);
+    padding: 3rem 2rem 2rem;
+  }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
+  .footer-brand p { color: var(--gray-400); font-size: 0.875rem; margin-top: 0.75rem; line-height: 1.7; max-width: 280px; }
+  .footer-col h4 { font-size: 0.85rem; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.5rem; }
+  .footer-col ul li a { color: var(--gray-400); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--white); }
+  .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: var(--gray-400); display: flex; justify-content: space-between; align-items: center; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .hero-inner, .demo-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-mockup { display: none; }
+    .hero h1 { font-size: 2rem; }
+    .pain-grid, .features-grid, .testimonials-grid, .stats-grid { grid-template-columns: 1fr; }
+    .plans-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .form-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+
+  /* SCROLL ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">MargenYa</a>
+    <ul class="nav-links">
+      <li><a href="#demo">Calculadora</a></li>
+      <li><a href="#funcionalidades">Funcionalidades</a></li>
+      <li><a href="#planes">Planes</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#registro" class="nav-cta">Empezá gratis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">Nueva herramienta para emprendedores</div>
+      <h1>Sabé exactamente <span>cuánto ganás</span> por cada producto</h1>
+      <p>Calculá tus márgenes, el punto de equilibrio y el precio ideal — sin saber de contabilidad y desde el celular.</p>
+      <div class="hero-btns">
+        <a href="#registro" class="btn-primary">Probalo gratis →</a>
+        <a href="#demo" class="btn-secondary">Ver cómo funciona</a>
+      </div>
+      <p class="hero-trust">Sin tarjeta de crédito. Gratis para siempre en el plan básico.</p>
+    </div>
+    <div class="hero-mockup">
+      <div class="mockup-bar">
+        <div class="mockup-dot r"></div>
+        <div class="mockup-dot y"></div>
+        <div class="mockup-dot g"></div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-title">Mi resumen — Junio 2025</div>
+        <div class="mockup-stat-row">
+          <div class="mockup-stat">
+            <div class="mockup-stat-label">Margen promedio</div>
+            <div class="mockup-stat-value green">42%</div>
+          </div>
+          <div class="mockup-stat">
+            <div class="mockup-stat-label">Punto equilibrio</div>
+            <div class="mockup-stat-value">87 ventas</div>
+          </div>
+          <div class="mockup-stat">
+            <div class="mockup-stat-label">Productos</div>
+            <div class="mockup-stat-value">12</div>
+          </div>
+        </div>
+        <div class="mockup-title" style="margin-top:0.75rem">Mis productos</div>
+        <div class="mockup-product-row">
+          <div><div class="mockup-product-name">Remera estampada</div><div class="mockup-product-meta">Costo $4.800 → Venta $8.500</div></div>
+          <span class="mockup-badge badge-green">+43%</span>
+        </div>
+        <div class="mockup-product-row">
+          <div><div class="mockup-product-name">Buzo oversize</div><div class="mockup-product-meta">Costo $9.200 → Venta $15.000</div></div>
+          <span class="mockup-badge badge-green">+38%</span>
+        </div>
+        <div class="mockup-product-row">
+          <div><div class="mockup-product-name">Gorra de tela</div><div class="mockup-product-meta">Costo $3.100 → Venta $4.500</div></div>
+          <span class="mockup-badge badge-yellow">+18%</span>
+        </div>
+        <div class="mockup-product-row">
+          <div><div class="mockup-product-name">Bolso de tela</div><div class="mockup-product-meta">Costo $6.800 → Venta $8.200</div></div>
+          <span class="mockup-badge badge-red">+7%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section class="section" id="problema">
+  <div class="container fade-in">
+    <div class="section-label">El problema</div>
+    <h2 class="section-title">¿Te pasa esto?</h2>
+    <p class="section-sub">Miles de emprendedores argentinos gestionan sus precios a ojo. MargenYa lo cambia.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">😟</div>
+        <h3>Fijás precios sin saber si ganás</h3>
+        <p>Calculás el costo, le sumás "algo" y cruzás los dedos. Al final del mes no entendés por qué no te sobra nada.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📉</div>
+        <h3>No sabés cuánto tenés que vender</h3>
+        <p>El alquiler, los servicios, la caja — ¿cuántas unidades tenés que vender este mes para no perder plata?</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔁</div>
+        <h3>Los costos suben y vos no te enterás</h3>
+        <p>Un proveedor actualizó precios y tu margen cayó a la mitad. Te diste cuenta tres semanas después.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO CALCULADORA -->
+<section class="demo-section" id="demo">
+  <div class="demo-inner">
+    <div class="demo-text fade-in">
+      <div class="section-label">Calculadora en vivo</div>
+      <h2>Así de simple. Probalo ahora.</h2>
+      <p>Ingresá los datos de cualquier producto y MargenYa te dice al instante cuánto cobrar, cuánto ganás y si el precio tiene sentido.</p>
+      <div class="demo-step">
+        <div class="step-num">1</div>
+        <div class="step-text">Ingresás el costo de tu producto o mercadería</div>
+      </div>
+      <div class="demo-step">
+        <div class="step-num">2</div>
+        <div class="step-text">Sumás todos los costos por unidad: packaging, envío, etiquetas y lo que corresponda</div>
+      </div>
+      <div class="demo-step">
+        <div class="step-num">3</div>
+        <div class="step-text">Ves en tiempo real el precio de venta sugerido y tu ganancia exacta</div>
+      </div>
+    </div>
+    <div class="calc-card fade-in" id="calculadora">
+      <h3>🧮 Calculá tu precio de venta</h3>
+      <div style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.75rem;">Costos por unidad</div>
+      <div class="form-group">
+        <label class="form-label" for="costo">Mercadería / producción</label>
+        <div class="input-prefix">
+          <span>$</span>
+          <input type="number" id="costo" class="form-input" placeholder="0" min="0" oninput="calcular()">
+        </div>
+        <div class="form-hint">Lo que pagás por comprar o fabricar una unidad</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="packaging">Packaging y presentación</label>
+        <div class="input-prefix">
+          <span>$</span>
+          <input type="number" id="packaging" class="form-input" placeholder="0" min="0" oninput="calcular()">
+        </div>
+        <div class="form-hint">Bolsa, caja, etiqueta, papel de seda, cinta, etc.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="otros">Otros costos por unidad</label>
+        <div class="input-prefix">
+          <span>$</span>
+          <input type="number" id="otros" class="form-input" placeholder="0" min="0" oninput="calcular()">
+        </div>
+        <div class="form-hint">Envío, comisión de plataforma (MeLi, etc.), insumos</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="margen">Margen de ganancia que querés</label>
+        <div class="input-suffix">
+          <input type="number" id="margen" class="form-input" placeholder="30" min="1" max="200" value="30" oninput="calcular()">
+          <span>%</span>
+        </div>
+        <div class="form-hint">30-40% es habitual en reventa, 50%+ en productos propios</div>
+      </div>
+      <div class="calc-result" id="resultado">
+        <div class="result-row">
+          <span class="result-label">Precio de venta sugerido</span>
+          <span class="result-value result-big" id="res-precio">-</span>
+        </div>
+        <div class="result-divider"></div>
+        <div class="result-row">
+          <span class="result-label">Ganancia por unidad</span>
+          <span class="result-value" id="res-ganancia">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Ganancia mensual estimada</span>
+          <span class="result-value" id="res-mensual">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Costo total por unidad</span>
+          <span class="result-value" id="res-costo-total">-</span>
+        </div>
+        <div class="result-row" id="row-desglose" style="display:none">
+          <span class="result-label" style="font-size:0.78rem; color:var(--muted)">Mercadería + packaging + otros</span>
+          <span style="font-size:0.82rem; color:var(--muted)" id="res-desglose">-</span>
+        </div>
+        <div id="res-alerta" class="result-alert"></div>
+      </div>
+      <a href="#registro" class="btn-primary calc-cta" id="calc-cta" style="display:none">Guardar este cálculo gratis →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCIONALIDADES -->
+<section class="section" id="funcionalidades">
+  <div class="container">
+    <div class="section-center fade-in">
+      <div class="section-label">Funcionalidades</div>
+      <h2 class="section-title">Todo lo que necesitás para fijar precios con confianza</h2>
+      <p class="section-sub">Sin planillas complicadas, sin jerga contable. Solo resultados claros.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <div class="feature-icon">💰</div>
+        <h3>Calculá tu precio ideal</h3>
+        <p>Ingresás el costo y el margen que querés. MargenYa te dice exactamente a cuánto vender para no perder plata.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">📊</div>
+        <h3>Conocé tu punto de equilibrio</h3>
+        <p>Descubrí cuántas unidades tenés que vender este mes para cubrir todos tus costos fijos. Visual y claro.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">🔔</div>
+        <h3>Alertas de caída de margen</h3>
+        <p>Cuando un proveedor sube el precio, MargenYa te avisa automáticamente que tu margen cayó por debajo del límite que vos definiste.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">📦</div>
+        <h3>Gestioná todos tus productos</h3>
+        <p>Cargá todo tu catálogo y compará de un vistazo qué productos te dejan más ganancia y cuáles no convienen.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">📄</div>
+        <h3>Exportá tu informe en PDF</h3>
+        <p>Generá un informe profesional de tus márgenes y precios para compartir con socios, contadores o proveedores.</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">📱</div>
+        <h3>Desde cualquier dispositivo</h3>
+        <p>MargenYa funciona en el celular, la tablet y la computadora. Sin instalación, sin complicaciones.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANES -->
+<section class="plans-section" id="planes">
+  <div class="container">
+    <div class="section-center fade-in">
+      <div class="section-label">Precios</div>
+      <h2 class="section-title">Empezá gratis. Crecé cuando lo necesites.</h2>
+      <p class="section-sub">Sin compromisos. Actualizá o volvé al plan gratis cuando quieras.</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card fade-in">
+        <div class="plan-name">Plan Gratis</div>
+        <div class="plan-price">$0 <span>para siempre</span></div>
+        <div class="plan-desc">Para emprendedores que recién arrancan</div>
+        <ul class="plan-features">
+          <li>Hasta 5 productos</li>
+          <li>Calculadora de precio y margen</li>
+          <li>Acceso desde celular y PC</li>
+          <li class="disabled">Punto de equilibrio multiproducto</li>
+          <li class="disabled">Alertas automáticas de margen</li>
+          <li class="disabled">Historial de variación de costos</li>
+          <li class="disabled">Exportación PDF</li>
+          <li class="disabled">Soporte prioritario</li>
+        </ul>
+        <a href="#registro" class="plan-btn outline">Empezá gratis</a>
+      </div>
+      <div class="plan-card featured fade-in">
+        <div class="plan-badge">⭐ Más elegido</div>
+        <div class="plan-name">Plan Pro</div>
+        <div class="plan-price">$4.900 <span>/ mes</span></div>
+        <div class="plan-desc">Para negocios que quieren crecer con datos</div>
+        <ul class="plan-features">
+          <li>Productos ilimitados</li>
+          <li>Calculadora de precio y margen</li>
+          <li>Acceso desde celular y PC</li>
+          <li>Punto de equilibrio multiproducto</li>
+          <li>Alertas automáticas de caída de margen</li>
+          <li>Historial de variación de costos</li>
+          <li>Exportación PDF</li>
+          <li>Soporte prioritario por WhatsApp</li>
+        </ul>
+        <a href="#registro" class="plan-btn filled">Quiero el Pro →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div>
+      <div class="stat-num">+2.300</div>
+      <div class="stat-label">emprendedores registrados</div>
+    </div>
+    <div>
+      <div class="stat-num">68%</div>
+      <div class="stat-label">de emprendedores no usan<br>herramientas de gestión</div>
+    </div>
+    <div>
+      <div class="stat-num">&lt; 60 seg</div>
+      <div class="stat-label">para hacer tu primer cálculo</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="section" id="testimonios">
+  <div class="container">
+    <div class="section-center fade-in">
+      <div class="section-label">Lo que dicen nuestros usuarios</div>
+      <h2 class="section-title">Emprendedores que ya calculan mejor</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Antes le ponía precio a ojo y al final del mes no entendía por qué no me sobraba nada. Con MargenYa me di cuenta que tres productos me estaban dando pérdida."</p>
+        <div class="testimonial-author">
+          <div class="avatar">LG</div>
+          <div><div class="author-name">Lucía G.</div><div class="author-role">Venta de ropa por Instagram, Córdoba</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Súper fácil. En 5 minutos cargué todos mis productos y ahora sé exactamente cuánto tengo que vender cada mes para no perder plata con el local."</p>
+        <div class="testimonial-author">
+          <div class="avatar">MR</div>
+          <div><div class="author-name">Martín R.</div><div class="author-role">Dietética, Buenos Aires</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"La alerta de margen es un golazo. Me avisó que el cartón subió y que mi caja de packaging ya no cerraba con el precio que tenía. La ajusté al toque."</p>
+        <div class="testimonial-author">
+          <div class="avatar">SV</div>
+          <div><div class="author-name">Sofía V.</div><div class="author-role">Pastelería artesanal, Rosario</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="faq-inner">
+    <div class="section-center fade-in" style="text-align:left; margin-bottom:2rem;">
+      <div class="section-label">Preguntas frecuentes</div>
+      <h2 class="section-title">¿Tenés dudas?</h2>
+    </div>
+    <div class="fade-in">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Necesito saber de contabilidad para usar MargenYa? <span class="faq-arrow">▾</span></button>
+        <div class="faq-answer">No. MargenYa está diseñado para emprendedores sin formación contable. Usamos lenguaje simple y cotidiano: te preguntamos cuánto te cuesta y cuánto querés ganar, y hacemos todo el cálculo por vos.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿El plan Gratis es realmente gratis para siempre? <span class="faq-arrow">▾</span></button>
+        <div class="faq-answer">Sí. El plan Gratis no tiene vencimiento ni necesita tarjeta de crédito. Podés usar MargenYa de forma gratuita con hasta 5 productos durante el tiempo que quieras.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Cómo funciona la alerta de caída de margen? <span class="faq-arrow">▾</span></button>
+        <div class="faq-answer">Vos definís un margen mínimo para cada producto. Cuando actualizás el costo de un proveedor y el margen resultante cae por debajo de ese umbral, MargenYa te avisa de inmediato para que ajustes el precio.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Puedo cancelar el Plan Pro cuando quiera? <span class="faq-arrow">▾</span></button>
+        <div class="faq-answer">Sí. Podés cancelar en cualquier momento desde tu cuenta, sin penalidades ni costos adicionales. Seguís teniendo acceso al plan Pro hasta el fin del período abonado y luego pasás automáticamente al plan Gratis.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Cómo se realiza el pago del Plan Pro? <span class="faq-arrow">▾</span></button>
+        <div class="faq-answer">El pago se realiza de forma segura a través de Mercado Pago. Podés pagar con tarjeta de crédito, débito o cualquier medio habilitado en tu cuenta de Mercado Pago.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRO / CONTACTO -->
+<section class="contact-section" id="registro">
+  <div class="contact-inner">
+    <h2>Empezá hoy. Es gratis.</h2>
+    <p>Creá tu cuenta en menos de un minuto y calculá tu primer margen ahora mismo.</p>
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="reg-nombre">Nombre</label>
+          <input type="text" id="reg-nombre" class="form-input" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-rubro">Rubro</label>
+          <input type="text" id="reg-rubro" class="form-input" placeholder="Ej: Ropa, alimentos...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Email</label>
+        <input type="email" id="reg-email" class="form-input" placeholder="tu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-pass">Contraseña</label>
+        <input type="password" id="reg-pass" class="form-input" placeholder="Mínimo 8 caracteres">
+      </div>
+      <button class="form-submit" onclick="registrar()">Crear mi cuenta gratis →</button>
+      <div class="form-success" id="reg-success">¡Listo! Tu cuenta fue creada. Revisá tu email para confirmarla.</div>
+      <p style="font-size:0.75rem; color:var(--muted); margin-top:1rem; text-align:center;">Al registrarte aceptás los <a href="#" style="color:var(--brand)">Términos de uso</a> y la <a href="#" style="color:var(--brand)">Política de privacidad</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section" id="contacto" style="padding-top:0;">
+  <div class="contact-inner">
+    <h2>¿Tenés alguna consulta?</h2>
+    <p>Respondemos en menos de 24 horas.</p>
+    <div class="contact-form">
+      <div class="form-group">
+        <label class="form-label" for="con-nombre">Nombre</label>
+        <input type="text" id="con-nombre" class="form-input" placeholder="Tu nombre">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="con-email">Email</label>
+        <input type="email" id="con-email" class="form-input" placeholder="tu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="con-mensaje">Mensaje</label>
+        <textarea id="con-mensaje" class="form-input" placeholder="Contanos tu consulta..."></textarea>
+      </div>
+      <button class="form-submit" onclick="enviarContacto()">Enviar consulta</button>
+      <div class="form-success" id="con-success">¡Gracias! Recibimos tu consulta y te respondemos pronto.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div style="font-size:1.3rem; font-weight:700; color:white;">MargenYa</div>
+      <p>La herramienta más simple para que emprendedores y comerciantes argentinos sepan exactamente cuánto ganan.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Producto</h4>
+      <ul>
+        <li><a href="#demo">Calculadora</a></li>
+        <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#planes">Planes y precios</a></li>
+        <li><a href="#faq">Preguntas frecuentes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Términos de uso</a></li>
+        <li><a href="#">Política de privacidad</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 MargenYa. Todos los derechos reservados.</span>
+    <span>Hecho para emprendedores argentinos 🇦🇷</span>
+  </div>
+</footer>
+
+<script>
+function formatARS(n) {
+  return '$' + Math.round(n).toLocaleString('es-AR');
+}
+
+function calcular() {
+  const mercaderia = parseFloat(document.getElementById('costo').value) || 0;
+  const packaging  = parseFloat(document.getElementById('packaging').value) || 0;
+  const otros      = parseFloat(document.getElementById('otros').value) || 0;
+  const margen     = parseFloat(document.getElementById('margen').value) || 30;
+
+  const costoTotal = mercaderia + packaging + otros;
+
+  if (costoTotal <= 0) {
+    document.getElementById('resultado').classList.remove('visible');
+    document.getElementById('calc-cta').style.display = 'none';
+    return;
+  }
+
+  const precioVenta  = costoTotal / (1 - margen / 100);
+  const gananciaUnit = precioVenta - costoTotal;
+
+  document.getElementById('res-precio').textContent     = formatARS(precioVenta);
+  document.getElementById('res-ganancia').textContent   = formatARS(gananciaUnit) + ' por venta';
+  document.getElementById('res-mensual').textContent    = '— (disponible en plan Pro)';
+  document.getElementById('res-costo-total').textContent = formatARS(costoTotal);
+
+  // Mostrar desglose si hay más de un componente
+  const rowDesglose = document.getElementById('row-desglose');
+  if ((packaging > 0 || otros > 0) && mercaderia > 0) {
+    rowDesglose.style.display = 'flex';
+    document.getElementById('res-desglose').textContent =
+      formatARS(mercaderia) + ' + ' + formatARS(packaging) + ' + ' + formatARS(otros);
+  } else {
+    rowDesglose.style.display = 'none';
+  }
+
+  const alerta = document.getElementById('res-alerta');
+  if (margen >= 35) {
+    alerta.className = 'result-alert alert-green';
+    alerta.textContent = '✓ Margen saludable. Este producto es rentable.';
+  } else if (margen >= 20) {
+    alerta.className = 'result-alert alert-yellow';
+    alerta.textContent = '⚠ Margen ajustado. Revisá si podés reducir costos o subir el precio.';
+  } else {
+    alerta.className = 'result-alert alert-red';
+    alerta.textContent = '✗ Margen muy bajo. Este precio puede generar pérdidas.';
+  }
+
+  document.getElementById('resultado').classList.add('visible');
+  document.getElementById('calc-cta').style.display = 'block';
+}
+
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('open'));
+  if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
+}
+
+function registrar() {
+  const email = document.getElementById('reg-email').value;
+  const nombre = document.getElementById('reg-nombre').value;
+  if (!nombre || !email) { alert('Por favor completá tu nombre y email.'); return; }
+  document.getElementById('reg-success').classList.add('visible');
+}
+
+function enviarContacto() {
+  const email = document.getElementById('con-email').value;
+  const nombre = document.getElementById('con-nombre').value;
+  if (!nombre || !email) { alert('Por favor completá nombre y email.'); return; }
+  document.getElementById('con-success').classList.add('visible');
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+calcular();
+</script>
+</body>
+</html>
