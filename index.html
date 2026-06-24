@@ -674,7 +674,7 @@
           <li>Exportación PDF</li>
           <li>Soporte prioritario por WhatsApp</li>
         </ul>
-        <a href="#registro" class="plan-btn filled">Quiero el Pro →</a>
+        <button onclick="abrirCheckout()" class="plan-btn filled" style="border:none;cursor:pointer;width:100%;">Quiero el Pro →</button>
       </div>
     </div>
   </div>
@@ -935,3 +935,170 @@ calcular();
 </script>
 </body>
 </html>
+
+<!-- MODAL CHECKOUT MERCADO PAGO -->
+<div id="mp-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:999; align-items:center; justify-content:center;">
+  <div id="mp-modal" style="background:white; border-radius:16px; max-width:420px; width:92%; padding:0; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.2); animation: slideUp 0.3s ease;">
+    
+    <!-- Header MP -->
+    <div style="background:#009EE3; padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="white"/><path d="M8 16.5c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#009EE3" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16.5" r="2.5" fill="#009EE3"/></svg>
+        <span style="color:white; font-weight:700; font-size:1rem;">Mercado Pago</span>
+      </div>
+      <button onclick="cerrarCheckout()" style="background:none; border:none; color:white; font-size:1.4rem; cursor:pointer; line-height:1;">×</button>
+    </div>
+
+    <!-- Resumen del producto -->
+    <div style="padding:1.25rem 1.5rem; border-bottom:1px solid #E5E7EB;">
+      <div style="font-size:0.78rem; color:#6B7280; margin-bottom:4px;">Estás comprando</div>
+      <div style="font-weight:700; font-size:1rem; color:#111827;">MargenYa — Plan Pro</div>
+      <div style="font-size:0.85rem; color:#6B7280; margin-top:2px;">Suscripción mensual · Se renueva automáticamente</div>
+      <div style="font-size:1.5rem; font-weight:800; color:#111827; margin-top:0.75rem;">$4.900 <span style="font-size:0.9rem; font-weight:400; color:#6B7280;">/ mes</span></div>
+    </div>
+
+    <!-- Pasos del checkout -->
+    <div id="mp-step-1" style="padding:1.25rem 1.5rem;">
+      <div style="font-size:0.82rem; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:1rem;">Método de pago</div>
+      
+      <div id="mp-metodo-tarjeta" onclick="seleccionarMetodo('tarjeta')" style="border:2px solid #E5E7EB; border-radius:10px; padding:0.875rem 1rem; margin-bottom:0.6rem; cursor:pointer; display:flex; align-items:center; gap:12px; transition:border-color 0.2s;">
+        <span style="font-size:1.3rem;">💳</span>
+        <div>
+          <div style="font-weight:600; font-size:0.9rem;">Tarjeta de crédito o débito</div>
+          <div style="font-size:0.75rem; color:#6B7280;">Visa, Mastercard, Cabal, Naranja</div>
+        </div>
+      </div>
+
+      <div id="mp-metodo-mp" onclick="seleccionarMetodo('mp')" style="border:2px solid #E5E7EB; border-radius:10px; padding:0.875rem 1rem; margin-bottom:0.6rem; cursor:pointer; display:flex; align-items:center; gap:12px; transition:border-color 0.2s;">
+        <span style="font-size:1.3rem;">🔵</span>
+        <div>
+          <div style="font-weight:600; font-size:0.9rem;">Saldo en Mercado Pago</div>
+          <div style="font-size:0.75rem; color:#6B7280;">Usá tu saldo disponible</div>
+        </div>
+      </div>
+
+      <div id="mp-metodo-transferencia" onclick="seleccionarMetodo('transferencia')" style="border:2px solid #E5E7EB; border-radius:10px; padding:0.875rem 1rem; cursor:pointer; display:flex; align-items:center; gap:12px; transition:border-color 0.2s;">
+        <span style="font-size:1.3rem;">🏦</span>
+        <div>
+          <div style="font-weight:600; font-size:0.9rem;">Transferencia bancaria</div>
+          <div style="font-size:0.75rem; color:#6B7280;">CBU / CVU / Alias</div>
+        </div>
+      </div>
+
+      <button onclick="irAlPago()" id="mp-btn-continuar" disabled style="width:100%; margin-top:1.25rem; padding:0.875rem; background:#009EE3; color:white; border:none; border-radius:10px; font-weight:700; font-size:1rem; cursor:not-allowed; opacity:0.5; transition:opacity 0.2s;">
+        Continuar →
+      </button>
+    </div>
+
+    <!-- Step 2: Confirmación -->
+    <div id="mp-step-2" style="display:none; padding:1.25rem 1.5rem;">
+      <div style="font-size:0.82rem; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:1rem;">Datos de la tarjeta</div>
+      <div style="margin-bottom:0.875rem;">
+        <label style="font-size:0.82rem; font-weight:600; color:#374151; display:block; margin-bottom:4px;">Número de tarjeta</label>
+        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)" style="width:100%; padding:0.65rem 0.875rem; border:1px solid #D1D5DB; border-radius:8px; font-size:0.95rem; outline:none;">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.875rem;">
+        <div>
+          <label style="font-size:0.82rem; font-weight:600; color:#374151; display:block; margin-bottom:4px;">Vencimiento</label>
+          <input type="text" placeholder="MM/AA" maxlength="5" style="width:100%; padding:0.65rem 0.875rem; border:1px solid #D1D5DB; border-radius:8px; font-size:0.95rem; outline:none;">
+        </div>
+        <div>
+          <label style="font-size:0.82rem; font-weight:600; color:#374151; display:block; margin-bottom:4px;">CVV</label>
+          <input type="text" placeholder="123" maxlength="3" style="width:100%; padding:0.65rem 0.875rem; border:1px solid #D1D5DB; border-radius:8px; font-size:0.95rem; outline:none;">
+        </div>
+      </div>
+      <div style="margin-bottom:1.25rem;">
+        <label style="font-size:0.82rem; font-weight:600; color:#374151; display:block; margin-bottom:4px;">Nombre en la tarjeta</label>
+        <input type="text" placeholder="Como figura en la tarjeta" style="width:100%; padding:0.65rem 0.875rem; border:1px solid #D1D5DB; border-radius:8px; font-size:0.95rem; outline:none;">
+      </div>
+      <button onclick="confirmarPago()" style="width:100%; padding:0.875rem; background:#00A650; color:white; border:none; border-radius:10px; font-weight:700; font-size:1rem; cursor:pointer;">
+        Pagar $4.900 →
+      </button>
+      <button onclick="document.getElementById('mp-step-2').style.display='none'; document.getElementById('mp-step-1').style.display='block';" style="width:100%; margin-top:0.6rem; padding:0.6rem; background:none; border:none; color:#6B7280; font-size:0.85rem; cursor:pointer;">← Volver</button>
+    </div>
+
+    <!-- Step 3: Éxito -->
+    <div id="mp-step-3" style="display:none; padding:2rem 1.5rem; text-align:center;">
+      <div style="font-size:3.5rem; margin-bottom:1rem;">✅</div>
+      <div style="font-size:1.2rem; font-weight:800; color:#111827; margin-bottom:0.5rem;">¡Pago exitoso!</div>
+      <div style="font-size:0.9rem; color:#6B7280; margin-bottom:0.5rem;">Tu Plan Pro está activo.</div>
+      <div style="font-size:0.8rem; color:#6B7280; margin-bottom:1.75rem;">Revisá tu email para los datos de acceso.</div>
+      <div style="background:#EDFBF0; border-radius:10px; padding:1rem; margin-bottom:1.5rem; text-align:left;">
+        <div style="font-size:0.78rem; color:#1A7A3C; font-weight:700; margin-bottom:4px;">RESUMEN DE COMPRA</div>
+        <div style="display:flex; justify-content:space-between; font-size:0.875rem;">
+          <span>MargenYa Pro</span><span style="font-weight:700;">$4.900/mes</span>
+        </div>
+        <div style="font-size:0.75rem; color:#6B7280; margin-top:4px;">Próximo cobro: en 30 días</div>
+      </div>
+      <button onclick="cerrarCheckout()" style="width:100%; padding:0.75rem; background:#1A56DB; color:white; border:none; border-radius:10px; font-weight:700; font-size:0.95rem; cursor:pointer;">Ir a mi cuenta →</button>
+    </div>
+
+    <!-- Seguridad footer -->
+    <div style="padding:0.75rem 1.5rem 1rem; border-top:1px solid #F3F4F6; display:flex; align-items:center; justify-content:center; gap:6px;">
+      <span style="font-size:0.75rem; color:#9CA3AF;">🔒 Pago seguro con</span>
+      <span style="font-size:0.78rem; font-weight:700; color:#009EE3;">Mercado Pago</span>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.mp-metodo-selected { border-color: #009EE3 !important; background: #F0FAFF; }
+</style>
+
+<script>
+let metodoSeleccionado = null;
+
+function abrirCheckout() {
+  document.getElementById('mp-overlay').style.display = 'flex';
+  document.getElementById('mp-step-1').style.display = 'block';
+  document.getElementById('mp-step-2').style.display = 'none';
+  document.getElementById('mp-step-3').style.display = 'none';
+  metodoSeleccionado = null;
+  document.getElementById('mp-btn-continuar').disabled = true;
+  document.getElementById('mp-btn-continuar').style.opacity = '0.5';
+  document.getElementById('mp-btn-continuar').style.cursor = 'not-allowed';
+  ['tarjeta','mp','transferencia'].forEach(m => {
+    document.getElementById('mp-metodo-' + m).classList.remove('mp-metodo-selected');
+  });
+}
+
+function cerrarCheckout() {
+  document.getElementById('mp-overlay').style.display = 'none';
+}
+
+function seleccionarMetodo(metodo) {
+  metodoSeleccionado = metodo;
+  ['tarjeta','mp','transferencia'].forEach(m => {
+    document.getElementById('mp-metodo-' + m).classList.remove('mp-metodo-selected');
+  });
+  document.getElementById('mp-metodo-' + metodo).classList.add('mp-metodo-selected');
+  const btn = document.getElementById('mp-btn-continuar');
+  btn.disabled = false;
+  btn.style.opacity = '1';
+  btn.style.cursor = 'pointer';
+}
+
+function irAlPago() {
+  if (!metodoSeleccionado) return;
+  document.getElementById('mp-step-1').style.display = 'none';
+  document.getElementById('mp-step-2').style.display = 'block';
+}
+
+function confirmarPago() {
+  document.getElementById('mp-step-2').style.display = 'none';
+  document.getElementById('mp-step-3').style.display = 'block';
+}
+
+function formatCardNumber(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+document.getElementById('mp-overlay').addEventListener('click', function(e) {
+  if (e.target === this) cerrarCheckout();
+});
+</script>
